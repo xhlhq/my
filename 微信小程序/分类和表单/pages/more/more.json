@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "more": "../../components/moreContent/moreContent"
+  },
+  "navigationBarTitleText": "更多"
+}

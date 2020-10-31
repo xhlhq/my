@@ -1,0 +1,100 @@
+<view id="approvalForm.approval">
+  <view class="section1">
+    <view class="item">
+      <view class="itemTitle">性别</view>
+      <picker class="itemValue" mode="selector" range="{{selectValue.sex}}" value="{{approvalForm.approvalSex}}"
+        bindchange="bindSelectorChange" data-key="approvalSex" data-selectkey="sex">
+        <view class="picker">
+          <text class="pickerValue" wx:if="{{approvalForm.approvalSex}}">{{approvalForm.approvalSex}}</text>
+          <text class="placeholder" wx:else>请选择></text>
+        </view>
+      </picker>
+    </view>
+    <view class="item">
+      <view class="itemTitle">民族</view>
+      <input class="itemValue" value="{{approvalForm.approvalNation}}" data-key="approvalNation" placeholder="请输入>"
+        bindinput="bindKeyInput" />
+    </view>
+    <view class="item">
+      <view class="itemTitle">出生年月</view>
+      <picker mode="date" class="itemValue" value="{{approvalForm.approvalBirth}}" start="1900-09-01" end="2020-09-01"
+        bindchange="bindDateChange" data-key="approvalBirth">
+        <view class="picker">
+          <text class="pickerValue" wx:if="{{approvalForm.approvalBirth}}">{{approvalForm.approvalBirth}}</text>
+          <text class="placeholder" wx:else>请选择></text>
+        </view>
+      </picker>
+    </view>
+    <view class="item">
+      <view class="itemTitle">学历</view>
+      <picker mode="selector" class="itemValue" value="{{approvalForm.approvalEducation}}"
+        range="{{selectValue.education}}" bindchange="bindSelectorChange" data-key="approvalEducation"
+        data-selectkey="education">
+        <view class="picker">
+          <text class="pickerValue" wx:if="{{approvalForm.approvalEducation}}">{{approvalForm.approvalEducation}}</text>
+          <text class="placeholder" wx:else>请选择></text>
+        </view>
+      </picker>
+    </view>
+    <view class="item">
+      <view class="itemTitle">参加党选时间</view>
+      <picker mode="date" class="itemValue" value="{{approvalForm.approvalJoinParty}}" start="2015-09-01"
+        end="2017-09-01" bindchange="bindDateChange" data-key="approvalJoinParty">
+        <view class="picker">
+          <text class="pickerValue" wx:if="{{approvalForm.approvalJoinParty}}">{{approvalForm.approvalJoinParty}}</text>
+          <text class="placeholder" wx:else>请选择></text>
+        </view>
+      </picker>
+    </view>
+    <view class="item">
+      <view class="itemTitle">身份证号码</view>
+      <input class="itemValue" value="{{approvalForm.approvalIdcard}}" data-key="approvalIdcard" placeholder="请输入>"
+        bindinput="bindKeyInput" />
+    </view>
+  </view>
+  <view class="section2">
+    <view class="item">
+      <view class="itemTitle">参加工作时间</view>
+      <picker mode="date" class="itemValue" value="{{approvalForm.approvalWorktime}}" start="2015-09-01"
+        end="2017-09-01" bindchange="bindDateChange" data-key="approvalWorktime">
+        <view class="picker">
+          <text class="pickerValue" wx:if="{{approvalForm.approvalWorktime}}">{{approvalForm.approvalWorktime}}</text>
+          <text class="placeholder" wx:else>请选择></text>
+        </view>
+      </picker>
+    </view>
+    <view class="item">
+      <view class="itemTitle">何时离（退）休</view>
+      <picker mode="date" class="itemValue" value="{{approvalForm.approvalRetire}}" start="2015-09-01" end="2017-09-01"
+        bindchange="bindDateChange" data-key="approvalRetire">
+        <view class="picker">
+          <text class="pickerValue" wx:if="{{approvalForm.approvalRetire}}">{{approvalForm.approvalRetire}}</text>
+          <text class="placeholder" wx:else>请选择></text>
+        </view>
+      </picker>
+    </view>
+    <view class="item">
+      <view class="itemTitle">健康状况</view>
+      <input class="itemValue" value="{{approvalForm.approvalHealth}}" data-key="approvalHealth" placeholder="请输入>"
+        bindinput="bindKeyInput" />
+    </view>
+  </view>
+  <view class="section3">
+    <view class="areaItem">
+      <view class="areaTitle">国外通讯处（中文）</view>
+      <textarea class="areaValue" bindinput="bindKeyInput" value="{{approvalForm.approvalChineseCommunication}}" 
+      data-key="approvalChineseCommunication" placeholder="请输入>" />
+      </view>
+    <view class="areaItem">
+      <view class="areaTitle">国内通讯处（外文）</view>
+      <textarea class="areaValue" bindinput="bindKeyInput" value="{{approvalForm.approvalForeignCommunication}}" 
+      data-key="approvalForeignCommunication" placeholder="请输入>"/>
+    </view>
+  </view>
+  <view class="section4">
+    <kinsfolk kinsfolkList="{{approvalForm.kinsfolkList}}" bindkinsfolkDataUpload="kinsfolkFromChildData" />
+  </view>
+  <view class="section5">
+    <button class="submitBtn" bindtap="onSubmit">上传</button>
+  </view>
+</view>

@@ -1,0 +1,7 @@
+<!--pages/more/more.wxml-->
+<view id="more">
+  <more moreItem="{{work}}"></more>
+  <more moreItem="{{classroom}}"></more>
+  <more moreItem="{{guide}}"></more>
+  <more moreItem="{{platform}}"></more>
+</view>

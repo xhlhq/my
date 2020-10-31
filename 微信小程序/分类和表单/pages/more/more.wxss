@@ -1,0 +1,6 @@
+/* pages/more/more.wxss */
+#more {
+  width: 100%;
+  padding: 5rpx 10rpx;
+  border-top: 1px solid #ccc;
+}

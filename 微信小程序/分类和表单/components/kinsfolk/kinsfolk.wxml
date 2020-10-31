@@ -1,0 +1,51 @@
+<block wx:for="{{kinsfolkList}}" 
+wx:key="kinsfolkIdcard">
+  <block data-key="{{item.kinsfolkId = index}}"></block>
+  <view class="kinsfolk">
+    <view class="kinsfolkTitle">
+      <text>国内直系亲属及主要社会关系情况</text>
+      <view class="flex-between">
+        <block wx:if="{{index == 0}}"></block>
+        <block wx:else>
+          <text class="kinsfolkOs" bindtap="subKinsfolk" data-index="{{index}}">-</text>
+        </block>       
+        <text class="kinsfolkOs" bindtap="addKinsfolk" data-index="{{index}}">+</text>
+      </view>     
+    </view>
+    <view class="kinsfolkContent">
+      <view class="item">
+        <view class="itemTitle">称谓</view>
+        <input class="itemValue" value="{{item.kinsfolkAppellation}}" data-key="kinsfolkAppellation"
+        data-index="{{index}}" placeholder="请输入>" bindinput="bindKinsfolkInput" bindblur="onBlur" />
+      </view>
+      <view class="item">
+        <view class="itemTitle">姓名</view>
+        <input class="itemValue" value="{{item.kinsfolkName}}" data-key="kinsfolkName" 
+        data-index="{{index}}" placeholder="请输入>" bindinput="bindKinsfolkInput" bindblur="onBlur" />
+      </view>
+      <view class="item">
+        <view class="itemTitle">身份证号</view>
+        <input class="itemValue" value="{{item.kinsfolkIdcard}}" data-key="kinsfolkIdcard" 
+        data-index="{{index}}" placeholder="请输入>" bindinput="bindKinsfolkInput" bindblur="onBlur" />
+      </view>
+      <view class="item">
+        <view class="itemTitle">毕业学校</view>
+        <input class="itemValue" value="{{item.kinsfolkWorkSituation}}" data-key="kinsfolkWorkSituation"
+        data-index="{{index}}" placeholder="请输入>" bindinput="bindKinsfolkInput" bindblur="onBlur" />
+      </view>
+      <view class="item">
+        <view class="itemTitle">现居地址（国内/国外）</view>
+        <picker class="itemValue" mode="selector" value="{{item.kinsfolkExpatriate}}" range="{{expatriate}}"
+          bindchange="bindSelectorChange" bindblur="onBlur" data-key="kinsfolkExpatriate" 
+          data-selectkey="expatriate" data-index="{{index}}">
+          <view class="picker">
+            <text class="pickerValue" wx:if="{{item.kinsfolkExpatriate}}">
+              {{item.kinsfolkExpatriate}}
+            </text>
+            <text class="placeholder" wx:else>请选择></text>
+          </view>
+        </picker>
+      </view>
+    </view>
+  </view>
+</block>

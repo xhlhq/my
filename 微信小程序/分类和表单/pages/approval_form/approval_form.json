@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "kinsfolk":"../../components/kinsfolk/kinsfolk"
+  },
+  "navigationBarTitleText": "因私出国(境)审批表"
+}

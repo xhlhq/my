@@ -1,0 +1,41 @@
+{
+  "pages":[
+    "pages/index/index",
+    "pages/more/more",
+    "pages/approval_form/approval_form",
+    "pages/work/work"
+  ],
+  "window":{
+    "backgroundTextStyle":"light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTextStyle":"black"
+  },
+  "tabBar": {
+    "color": "#6e6d6b",
+    "selectedColor": "#e64340",
+    "borderStyle": "white",
+    "backgroundColor": "#fff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "images/tabbar/home-off.png",
+        "selectedIconPath": "images/tabbar/home-on.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/more/more",
+        "iconPath": "images/tabbar/ic_catefory_normal.png",
+        "selectedIconPath": "images/tabbar/ic_catefory_pressed.png",
+        "text": "更多"
+      },
+      {
+        "pagePath": "pages/approval_form/approval_form",
+        "iconPath": "images/tabbar/my-off.png",
+        "selectedIconPath": "images/tabbar/my-off.png",
+        "text": "审批表"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

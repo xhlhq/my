@@ -1,0 +1,17 @@
+<view class="more-item">
+  <view class="more-title">
+    <text>{{moreItem.title}}</text>
+  </view>
+  <view class="more-content">
+    <view class="more-content-item" 
+    wx:for="{{moreItem.list}}" 
+    wx:key="index" 
+    bindtap="tabClick" 
+    data-id="{{item.id}}" 
+    data-url="{{item.url}}">
+      <text class="item-status {{item.statusClass}}">{{item.itemStatus}}</text>
+      <image class="item-img" src="{{item.itemImg}}"></image>
+      <view class="item-text">{{item.itemText}}</view>
+    </view>
+  </view>
+</view>
