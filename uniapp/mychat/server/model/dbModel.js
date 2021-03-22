@@ -19,6 +19,7 @@ var FriendSchema = new Schema({
     userId: {type: Schema.Types.ObjectId,ref:'User'},  //用户id
     friendId: {type: Schema.Types.ObjectId,ref:'User'},  //好友id
     status: {type: String},        //状态 0已成为好友 1请求中 2申请好友
+    nickName: {type: String},
     time: {type: Date},        //交友时间
 });
 //一对一发送信息表

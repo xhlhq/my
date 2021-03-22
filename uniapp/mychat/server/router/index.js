@@ -5,6 +5,7 @@ const { signIn } = require('../server/signIn');
 var singup = require('../server/signup');
 var signin = require('../server/signIn');
 var search = require('../server/search');
+var user = require('../server/user');
 
 module.exports = function(app){
     app.get('/test',(req,res) => {
@@ -54,5 +55,21 @@ module.exports = function(app){
     //判断是否加入了群组
     app.post('/search/isingroup',(req,res) => {
         search.isInGroup(req,res);
+    })
+    //用户详情
+    app.post('/user/detail',(req,res) => {
+        user.userDetail(req,res);
+    })
+     //修改用户详情
+     app.post('/user/update',(req,res) => {
+        user.userUpdate(req,res);
+    })
+    //修改好友昵称
+    app.post('/user/getnickname',(req,res) => {
+        user.getFriendNickname(req,res);
+    })
+     //修改好友昵称
+     app.post('/user/remakenickname',(req,res) => {
+        user.remakeFriendNickname(req,res);
     })
 }

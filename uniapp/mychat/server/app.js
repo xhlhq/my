@@ -31,12 +31,19 @@ app.all('*', (req, res, next) => {
 // app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-//token判断
+//token验证
 app.use((req,res,next) => {
-    if(typeof(req.body.token) == 'undefined'){
-        //如果token没定义，也就是没携带token
+    if(typeof(req.body.token) != 'undefined'){
+        //如果token定义了，也就是携带了token，则验证token
         let token = req.body.token;
         let tokenMatch = jwt.verifyToken(token);
+        if(tokenMatch === 1){
+            //通过验证
+            next()
+        }else{
+            //未通过验证
+            res.send({status:300})
+        }
     }else{
         next();
     }
