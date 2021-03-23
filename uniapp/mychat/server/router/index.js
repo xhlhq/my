@@ -6,6 +6,7 @@ var singup = require('../server/signup');
 var signin = require('../server/signIn');
 var search = require('../server/search');
 var user = require('../server/user');
+var friend = require('../server/friend');
 
 module.exports = function(app){
     app.get('/test',(req,res) => {
@@ -71,5 +72,19 @@ module.exports = function(app){
      //修改好友昵称
      app.post('/user/remakenickname',(req,res) => {
         user.remakeFriendNickname(req,res);
+    })
+    
+    //好友操作
+    //好友申请
+    app.post('/friend/apply',(req,res) => {
+        friend.applyFriend(req,res);
+    })
+    //更新好友状态
+    app.post('/friend/update',(req,res) => {
+        friend.updateFriendState(req,res);
+    })
+    //拒绝或删除好友
+    app.post('/friend/delete',(req,res) => {
+        friend.deleteFriend(req,res);
     })
 }

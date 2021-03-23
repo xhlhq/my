@@ -4,13 +4,14 @@ var User = dbModel.model('User');
 var Friend = dbModel.model('Friend'); 
 var Group = dbModel.model('Group');
 var GroupMember = dbModel.model('GroupMember');
+var Message = dbModel.model('Message');
 
 
 var bcrypt = require('../db/bcrypt');
 var jwt = require('../db/jwt')
 
 //用户注册，新建用户
-exports.bulidUser = function(name,email,password,res){
+exports.buildUser = function(name,email,password,res){
     //密码加密
     let psd = bcrypt.encryption(password);
     let data = {
@@ -162,7 +163,7 @@ exports.userDetial = function(id,res){
     let out = {'password':0};
     User.findOne(wherestr,out,(err,result) => {
         if(err){
-            res.send({status:500});
+            res.send({status:500,message:'用户详情查询失败'});
         }else{
             res.send({status:200,result});
         }
@@ -170,6 +171,17 @@ exports.userDetial = function(id,res){
 }
 
 ///////////////////// 用户修改页 /////////////////
+function update(data,update,res){
+    User.findByIdAndUpdate(data,update,function(err,resove){
+        if(err){
+            //修改失败
+            res.send({status:500,messgae:'修改失败'});
+        }else{
+            //修改成功
+            res.send({status:200,message:'修改成功'});
+        }
+    })
+}
 exports.userUpdate = function(data,res){
     let updateStr = {};
     if(typeof(data.password) != 'undefined'){
@@ -188,18 +200,24 @@ exports.userUpdate = function(data,res){
                             if(data.type == 'password'){
                                 let password = bcrypt.encryption(data.data);
                                 updateStr[data.type] = password;
+                                update(data.id,updateStr,res);
                             }else{
                                 updateStr[data.type] = data.data;
+                                //确保修改后的邮箱未重复
+                                User.countDocuments(updateStr, (err,result) => {
+                                    if(err){
+                                        res.send({status:500});
+                                    }else{
+                                        //没有匹配项，可以修改
+                                        if(result == 0){
+                                            update(data.id,updateStr,res);
+                                        }else{
+                                            //修改后的邮箱已存在，不能使用
+                                            res.send({status:300,message:'邮箱已存在'})
+                                        }
+                                    }
+                                })
                             }
-                            User.findByIdAndUpdate(data.id,updateStr,function(err,resove){
-                                if(err){
-                                    //修改失败
-                                    res.send({status:500});
-                                }else{
-                                    //修改成功
-                                    res.send({status:200});
-                                }
-                            })
                         }else{
                             //密码错误
                             res.send({status:400,message:'密码错误'});
@@ -208,18 +226,26 @@ exports.userUpdate = function(data,res){
                 }
             }
         })
-    }else{
-        //要设置的不是密码
+    }else if(data.type == 'name'){
         updateStr[data.type] = data.data;
-        User.findByIdAndUpdate(data.id,updateStr,function(err,resove){
+        //确保修改后的姓名未重复
+        User.countDocuments(updateStr, (err,result) => {
             if(err){
-                //修改失败
                 res.send({status:500});
             }else{
-                //修改成功
-                res.send({status:200});
+                //没有匹配项，可以修改
+                if(result == 0){
+                    update(data.id,updateStr,res);
+                }else{
+                    //修改后的姓名已存在，不能使用
+                    res.send({status:300,message:'用户名已存在'})
+                }
             }
         })
+    }else{
+        //一般项修改
+        updateStr[data.type] = data.data;
+        update(data.id,updateStr,res);
     }
 }
 ////////////////////// 好友昵称修改 //////////////////////
@@ -248,6 +274,106 @@ exports.remakeFriendNickname = function(data,res){
         }else{
             //修改成功
             res.send({status:200});
+        }
+    })
+}
+////////////////////////////// 好友操作//////////
+//创建好友表
+exports.buildFriend = function(uid,fid,status,res){
+    let data = {
+        userId: uid,
+        friendId: fid,
+        status: status,
+        time: new Date(),
+        lastTiem: new Date(),
+    }
+
+    let friend = new Friend(data);
+    friend.save((err,result) => {
+        if(err){
+            // res.send({status: 500});
+            console.log('好申请出错');
+        }else{
+            // res.send({status: 200});
+        }
+    })
+}
+//添加一对一消息表
+exports.buildFriendMessage = function(uid,fid,msg,type,res){
+    let data = {
+        userId: uid,
+        friendId: fid,
+        message: msg, // 0文字 1图片链接 2音频资源…
+        types: type,
+        status: 1,  //0已读 1未读
+        time: new Date(),
+    }
+
+    let message = new Message(data);
+    message.save((err,result) => {
+        if(err){
+            res.send({status: 500});
+        }else{
+            res.send({status: 200,message:msg});
+        }
+    })
+}
+//好友最后通讯时间
+exports.friendLastMessageTime = function(data){
+    let wherestr = {$or:[{'userId':data.uid,'friendId':data.fid},{'userId':data.fid,'friendId':data.uid}]};
+    let updateStr = {'lastTime': new Date()};
+    Friend.updateMany(wherestr,updateStr,(err,result) => {
+        if(err){
+            // res.send({status: 500});
+            console.log('好友最后通讯时间更新出错');
+        }else{
+            // res.send({status: 200});
+        }
+    })
+}
+//好友申请
+exports.applyFriend = function(data,res){
+    //判断是否已经申请过好友
+    let wherestr = ({'userId':data.uid,'friendId':data.fid});
+    Friend.countDocuments(wherestr,(err,result) => {
+        if(err){
+            res.send({status:500});
+        }else{
+            if(result == 0){
+                //初次申请
+                this.buildFriend(data.uid,data.fid,2);
+                this.buildFriend(data.fid,data.uid,1);
+            }else{
+                //已经申请过好友，更新最后通话时间
+                this.friendLastMessageTime(data);
+                // this.friendLastMessageTime(data.fid,data.uid);
+            }
+            //添加消息
+            this.buildFriendMessage(data.uid,data.fid,data.msg,0,res);
+        }
+    })
+}
+//更新好友状态（好友通过）
+exports.updateFriendState = function(data,res){
+    let wherestr = {$or:[{'userId':data.uid,'friendId':data.fid},{'userId':data.fid,'friendId':data.uid}]};
+    //改为已为好友 status:0
+    Friend.updateMany(wherestr,{'status':0},(err,result) => {
+        if(err){
+            res.send({status:500});
+        }else{
+            res.send({status:200});
+        }
+    })
+}
+//拒绝或删除好友
+exports.deleteFriend = function(data,res){
+    let wherestr = {$or:[{'userId':data.uid,'friendId':data.fid},{'userId':data.fid,'friendId':data.uid}]};
+    //改为已为好友 status:0
+    Friend.deleteMany(wherestr,(err,result) => {
+        if(err){
+            res.send({status:500});
+        }else{
+            res.send({status:200,message:'好友删除成功'});
         }
     })
 }

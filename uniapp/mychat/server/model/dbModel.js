@@ -18,18 +18,19 @@ var UserSchema = new Schema({
 var FriendSchema = new Schema({
     userId: {type: Schema.Types.ObjectId,ref:'User'},  //用户id
     friendId: {type: Schema.Types.ObjectId,ref:'User'},  //好友id
-    status: {type: String},        //状态 0已成为好友 1请求中 2申请好友
-    nickName: {type: String},
+    status: {type: String},        //状态 0已成为好友 1请求中 2申请方
+    nickName: {type: String},   //昵称
     time: {type: Date},        //交友时间
+    lastTime: {type: Date},    //最后消息时间
 });
 //一对一发送信息表
 var MessageSchema = new Schema({
     userId: {type: Schema.Types.ObjectId,ref:'User'},  //用户id
     friendId: {type: Schema.Types.ObjectId,ref:'User'},  //好友id
     message: {type: String},        //内容
-    type: {type: String},        //类型
+    types: {type: String},        //类型 0文字 1图片链接 2音频资源…
     time: {type: Date},        //发送时间
-    status: {type: Number},    //消息状态  
+    status: {type: Number},    //消息状态  0已读  1未读
 });
 //群表
 var GroupSchema = new Schema({
@@ -46,6 +47,7 @@ var GroupMemberSchema = new Schema({
     name: {type: String},        //群内名称
     tip: {type: Number},         //未读消息数
     time: {type: Date},        //发送时间
+    lastTime: {type: Date},    //最后发送消息时间
     shield: {type: Number},     //是否屏蔽
 });
 //

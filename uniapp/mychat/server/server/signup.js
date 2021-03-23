@@ -8,7 +8,7 @@ exports.signUp = function(req,res){
     let password = req.body.password;
     // console.log('req:',req)
     // res.send({name,email,password});
-    dbServer.bulidUser(name,email,password,res);
+    dbServer.buildUser(name,email,password,res);
 }
 
 //用户或邮箱是否占用判断

@@ -5,6 +5,7 @@ var jwt = require('./db/jwt');
 const express = require('express')
 const app = express()
 const port = 3001
+const path = require('path')
 
 
 //跨域解决方案
@@ -29,7 +30,13 @@ app.all('*', (req, res, next) => {
 });
 
 // app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+//解析上传的数据并对数据大小进行限制
+app.use(bodyParser.urlencoded({limit: '50mb',extended: true}));
+app.use(bodyParser.json({limit: '50mb'}));
+
+//获取静态目录
+// app.use(express.static(__dirname + '/data'));
+app.use(express.static(path.join(__dirname, 'data')));
 
 //token验证
 app.use((req,res,next) => {
@@ -51,6 +58,7 @@ app.use((req,res,next) => {
 
 //引入路由
 require('./router/index')(app);
+require('./router/files')(app);
 //404页面
 app.use((req,res,next) => {
     let err = new Error('Not Found!');
