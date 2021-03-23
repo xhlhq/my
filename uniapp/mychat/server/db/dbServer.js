@@ -5,6 +5,7 @@ var Friend = dbModel.model('Friend');
 var Group = dbModel.model('Group');
 var GroupMember = dbModel.model('GroupMember');
 var Message = dbModel.model('Message');
+var GroupMessage = dbModel.model('GroupMessage');
 
 
 var bcrypt = require('../db/bcrypt');
@@ -374,6 +375,139 @@ exports.deleteFriend = function(data,res){
             res.send({status:500});
         }else{
             res.send({status:200,message:'好友删除成功'});
+        }
+    })
+}
+/////////////////////////////// 首页 /////////////////
+//获取好友列表
+exports.getUserList = function(data,res){
+    let query = Friend.find({});
+    //查询条件
+    query.where({'userId':data.uid,'status':data.status});
+    //查找与uid关联的user对象
+    query.populate('friendId');
+    //排序方式 根据最后一次通话进行倒叙排列
+    query.sort({'lastTime':-1});
+    //查询结果
+    query.exec().then(e => {
+        let result = e.map(item => {
+            return {
+                id: item.friendId._id,
+                name: item.friendId.name,
+                nickName: item.nickName,
+                imgurl: item.friendId.imgurl,
+                lastTime: item.lastTiem
+            }
+        })
+        res.send({status:200,result});
+    }).catch(err => {
+        res.send({status:500});
+    })
+}
+//获取最后一条一对一消息
+exports.getLastMsg = function(data,res){
+    let query = Message.findOne({});
+    //查询条件
+    query.where({$or:[{'userId':data.uid,'friendId':data.fid},{'userId':data.fid,'friendId':data.uid}]});
+    //排序方式 根据最后一次通话进行倒叙排列
+    query.sort({'time':-1});
+    //查询结果
+    query.exec().then(item => {
+        let result = {
+                message: item.message,
+                types: item.types,
+                time: item.time
+            }
+        res.send({status:200,result});
+    }).catch(err => {
+        res.send({status:500});
+    })
+}
+//未读消息数
+exports.unreadMsgNumber = function(data,res){
+    //条件
+    let wherestr = ({'userId':data.uid,'friendId':data.fid,'status':1});
+    Message.countDocuments(wherestr,(err,result) => {
+        if(err){
+            res.send({status:500});
+        }else{
+            res.send({status:200,result});
+        }
+    })
+}
+//查看消息使未读消息数变为0
+exports.emptyMsgNumber = function(data,res){
+    //条件
+    let wherestr = ({'userId':data.uid,'friendId':data.fid,'status':1});
+    // 修改内容
+    let updateStr = {'status':0};
+    Message.updateMany(wherestr,updateStr,(err,result) => {
+        if(err){
+            res.send({status:500});
+        }else{
+            res.send({status:200});
+        }
+    })
+}
+//获取群列表
+exports.getGroupList = function(uid,res){
+    let query = GroupMember.find({});
+    //查询条件
+    query.where({'userId':uid});
+    //查找与uid关联的群表对象
+    query.populate('GroupId');
+    //排序方式 根据最后一次通话进行倒叙排列
+    query.sort({'lastTime':-1});
+    //查询结果
+    query.exec().then(e => {
+        let result = e.map(item => {
+            return {
+                gid: item.groupId._id,
+                groupName: item.groupId.name,
+                userName: item.name,
+                imgurl: item.groupId.imgUrl,
+                lastTime: item.lastTiem,
+                tip: item.tip
+            }
+        })
+        res.send({status:200,result});
+    }).catch(err => {
+        res.send({status:500});
+    })
+}
+//获取群最后一条消息数
+exports.getGroupLastMsg = function(gid,res){
+    let query = GroupMessage.findOne({});
+    //查询条件
+    query.where({'groupId':gid});
+    //关联用户
+    query.populate('userId');
+    //排序方式 根据最后一次通话进行倒叙排列
+    query.sort({'time':-1});
+    //查询结果
+    query.exec().then(item => {
+        let result = {
+                message: item.message,
+                types: item.types,
+                time: item.time,
+                name: item.name
+            }
+        res.send({status:200,result});
+    }).catch(err => {
+        res.send({status:500});
+    })
+}
+//查看消息使未读消息数变为0
+exports.emptyGroupMsgNumber = function(data,res){
+    //条件
+    let wherestr = ({'userId':data.uid,'groupId':data.gid});
+    // 修改内容
+    let updateStr = {'tip':0};
+    Message.updateOne(wherestr,updateStr,(err,result) => {
+        if(err){
+            res.send({status:500});
+        }else{
+            res.send({status:200});
         }
     })
 }

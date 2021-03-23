@@ -7,6 +7,7 @@ var signin = require('../server/signIn');
 var search = require('../server/search');
 var user = require('../server/user');
 var friend = require('../server/friend');
+var index = require('../server/index');
 
 module.exports = function(app){
     app.get('/test',(req,res) => {
@@ -86,5 +87,35 @@ module.exports = function(app){
     //拒绝或删除好友
     app.post('/friend/delete',(req,res) => {
         friend.deleteFriend(req,res);
+    })
+
+    //首页
+    //获取好友列表
+    app.post('/index/get_user_list',(req,res) => {
+        index.getUserList(req,res);
+    })
+    //获取最后一条一对一消息
+    app.post('/index/get_last_msg',(req,res) => {
+        index.getLastMsg(req,res);
+    })
+    //获取未读消息数
+    app.post('/index/unread_msg',(req,res) => {
+        index.unreadMsgNumber(req,res);
+    })
+    //清空未读消息数
+    app.post('/index/empty_msg',(req,res) => {
+        index.emptyMsgNumber(req,res);
+    })
+    //获取群列表
+    app.post('/index/get_group_list',(req,res) => {
+        index.getGroupList(req,res);
+    })
+    //获取最后一条群消息
+    app.post('/index/get_group_last_msg',(req,res) => {
+        index.getGroupLastMsg(req,res);
+    })
+    //清空未读群消息
+    app.post('/index/empty_group_msg',(req,res) => {
+        index.emptyGroupMsgNumber(req,res);
     })
 }

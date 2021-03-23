@@ -50,12 +50,12 @@ var GroupMemberSchema = new Schema({
     lastTime: {type: Date},    //最后发送消息时间
     shield: {type: Number},     //是否屏蔽
 });
-//
+//群消息表
 var GroupMessageSchema = new Schema({
     userId: {type: Schema.Types.ObjectId,ref:'User'},  //用户id
     groupId: {type: Schema.Types.ObjectId,ref:'Group'},  //群id
     message: {type: String},        //内容
-    type: {type: String},        //类型
+    types: {type: String},        //类型
     time: {type: Date},        //发送时间
 });
 
