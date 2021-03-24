@@ -43,7 +43,7 @@ exports.countUserValue = function(data,type,res){
         if(err){
             res.send({status:500});
         }else{
-            res.send({status:200},result)
+            res.send({status:200,result});
         }
     })
 }
@@ -61,22 +61,22 @@ exports.userMatch = function(data, password, res){
         }else{
             if(result == ''){
                 //没匹配到，用户不存在
-                res.send({status:400,message:'用户不存在'});
+                res.send({status:400});
             }else{
                 result.map(function(e){
                     const psdMatch = bcrypt.decode(password,e.password);
                     if(psdMatch){
                         let token = jwt.generateToken(e._id);
-                        let back = {
+                        let result = {
                             id: e._id,
                             name: e.name,
                             imgurl: e.imgurl,
                             token: token
                         }
-                        res.send({status:200,back});
+                        res.send({status:200,result});
                     }else{
                         //密码错误
-                        res.send({status:400,message:'密码错误'});
+                        res.send({status:400});
                     }
                 })
             }

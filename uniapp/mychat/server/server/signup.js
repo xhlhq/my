@@ -1,13 +1,16 @@
 //注册页面的服务处理
 var dbServer = require('../db/dbServer');
+var sendEmail = require('../db/emailServer');
 
 //用户注册
 exports.signUp = function(req,res){
     let name = req.body.name;
     let email = req.body.email;
     let password = req.body.password;
-    // console.log('req:',req)
-    // res.send({name,email,password});
+
+    //发送邮件
+    sendEmail.emailSignUp(email,res);
+
     dbServer.buildUser(name,email,password,res);
 }
 
